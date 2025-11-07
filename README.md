@@ -31,12 +31,16 @@ Mark the device as an LVM PV:
 
 ```
 sudo pvcreate /dev/sdb1
+```
 # or:
+```
  sudo pvcreate /dev/sdb
 ```
 Check PVs:
 ```
 sudo pvs
+```
+```
 sudo pvdisplay /dev/sdb1
 ```
 
@@ -45,15 +49,17 @@ sudo pvdisplay /dev/sdb1
 Group one or more PVs into a Volume Group:
 ```
 sudo vgcreate vg_data /dev/sdb1
-...
-..
-.
+```
 
 # vg_data is the VG name
-```
+
+
 Check VGs:
 ```
 sudo vgs
+```
+#OR 
+```
 sudo vgdisplay vg_data
 ```
 4) # **Create a Logical Volume (LV)**
@@ -69,6 +75,9 @@ sudo lvcreate \-l 100%FREE \-n lv_backup vg_data
 Check LVs:
 ```
 sudo lvs
+```
+#OR
+```
 sudo lvdisplay /dev/vg_data/lv_backup
 ```
 5) # **Create a filesystem on the LV**
@@ -78,7 +87,7 @@ Choose filesystem (ext4 or xfs are common):
 ```
 sudo mkfs.ext4 /dev/vg_data/lv_backup
 ```
-\# or:
+#OR
 ```
 sudo mkfs.xfs /dev/vg\_data/lv\_backup
 ```
@@ -91,6 +100,7 @@ sudo mkdir -p /mnt/backup
 ```
 sudo mount /dev/vg_data/lv_backup /mnt/backup
 ```
+
 # **Confirm mount:**
 ```
 df -h | grep /mnt/backup
@@ -111,9 +121,9 @@ sudo blkid /dev/vg_data/lv_backup
 /dev/mapper/vg_data-lv_backup /mnt/backup ext4 defaults 0 2
 
 Then test:
-
+```
 sudo umount /mnt/backup
-
+```
 sudo mount \-a  \# should mount without errors
 
 8) # **Common management tasks**
@@ -184,20 +194,26 @@ sudo pvremove /dev/sdb1
 # show physical volumes summary   ## detailed PV info
 ```
 pvs
+
 #or
+
 pvdisplay    
 ```
 		
 # show volume groups summary   /# detailed VG info 
 ```
 vgs
+
 #or
+
 vgdisplay      
 ```
 # show logical volumes summary   #/# detailed LV info  
 ```
 lvs
-or
+
+#or
+
 lvdisplay    
 ```
   
