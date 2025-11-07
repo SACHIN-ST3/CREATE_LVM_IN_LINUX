@@ -37,59 +37,71 @@ sudo pvdisplay /dev/sdb1
 
 Group one or more PVs into a Volume Group:
 ```
-sudo vgcreate vg\_data /dev/sdb1  \# vg\_data is the VG name
+sudo vgcreate vg_data /dev/sdb1
+...
+..
+.
+
+# vg_data is the VG name
 ```
 Check VGs:
 ```
 sudo vgs
-sudo vgdisplay vg\_data
+sudo vgdisplay vg_data
 ```
 4) # **Create a Logical Volume (LV)**
 
 Decide size (e.g. 10G) and name:
 ```
-sudo lvcreate \-L 10G \-n lv\_backup vg\_data
+sudo lvcreate -L 10G -n lv_backup vg_data
 ```
 \# or to use all free space:
 ```
-sudo lvcreate \-l 100%FREE \-n lv\_backup vg\_data
+sudo lvcreate \-l 100%FREE \-n lv_backup vg_data
 ```
 Check LVs:
 ```
 sudo lvs
-sudo lvdisplay /dev/vg\_data/lv\_backup
+sudo lvdisplay /dev/vg_data/lv_backup
 ```
 5) # **Create a filesystem on the LV**
 
-Choose filesystem (ext4 or xfs are common): sudo mkfs.ext4 /dev/vg\_data/lv\_backup
+Choose filesystem (ext4 or xfs are common): 
 
+```
+sudo mkfs.ext4 /dev/vg_data/lv_backup
+```
 \# or:
 ```
 sudo mkfs.xfs /dev/vg\_data/lv\_backup
 ```
 6) # **Mount the LV**
 
-Create mountpoint and mount:
-
-sudo mkdir \-p /mnt/backup
-
-sudo mount /dev/vg\_data/lv\_backup /mnt/backup
-
-Confirm mount:
-
-df \-h | grep /mnt/backup
+Create a mountpoint and mount:
+```
+sudo mkdir -p /mnt/backup
+```
+```
+sudo mount /dev/vg_data/lv_backup /mnt/backup
+```
+# **Confirm mount:**
+```
+df -h | grep /mnt/backup
+```
 
 7) # **Make mount persistent (fstab)**
 
-Get the device mapper path or UUID:
+Get the device mapper path or #***UUID:***
+```
+sudo blkid /dev/vg_data/lv_backup
+```
+# ***Example output: ***
+```
+/dev/mapper/vg_data-lv_backup: UUID="..." TYPE="ext4"
+```
+ # ***Add to /etc/fstab (use UUID or /dev/mapper path). Example line using device mapper:
 
-sudo blkid /dev/vg\_data/lv\_backup
-
-\# Example output: /dev/mapper/vg\_data-lv\_backup: UUID="..." TYPE="ext4"
-
-Add to /etc/fstab (use UUID or /dev/mapper path). Example line using device mapper:
-
-/dev/mapper/vg\_data-lv\_backup /mnt/backup ext4 defaults 0 2
+/dev/mapper/vg_data-lv_backup /mnt/backup ext4 defaults 0 2
 
 Then test:
 
@@ -102,20 +114,21 @@ sudo mount \-a  \# should mount without errors
 ## **Extend LV (and filesystem)**
 
 If you add PVs to VG or have free space, extend LV:
+```
+sudo lvextend -L +5G /dev/vg_data/lv_backup # add 5GB
 
-sudo lvextend \-L \+5G /dev/vg\_data/lv\_backup \# add 5GB
-
-\# or use all free: sudo lvextend \-l \+100%FREE /dev/vg\_data/lv\_backup
-
+# or use all free: sudo lvextend -l +100%FREE /dev/vg_data/lv_backup
+```
 Then grow filesystem:
 
 * For ext4 (can be grown online while mounted):
-
-sudo resize2fs /dev/vg\_data/lv\_backup
-
+```
+sudo resize2fs /dev/vg_data/lv_backup
+```
 * For xfs (must be mounted):
-
-sudo xfs\_growfs /mnt/backup
+```
+sudo xfs_growfs /mnt/backup
+```
 
 ## **Reduce LV (dangerous — do backup first)**
 
@@ -124,35 +137,65 @@ sudo xfs\_growfs /mnt/backup
 2. Run fsck and resize filesystem down.
 
 3. Use lvreduce with caution:
-
+```
 sudo umount /mnt/backup
-
+```
+```
 sudo e2fsck \-f /dev/vg\_data/lv\_backup
+```
+```
+sudo resize2fs /dev/vg_data/lv_backup 8G 
+```
 
-sudo resize2fs /dev/vg\_data/lv\_backup 8G \# shrink FS to 8G sudo lvreduce \-L 8G /dev/vg\_data/lv\_backup  
-sudo mount /dev/vg\_data/lv\_backup /mnt/backup
+# shrink FS to 8G
+```
+sudo lvreduce -L 8G /dev/vg_data/lv_backup
+```
+```
+sudo mount /dev/vg_data/lv_backup /mnt/backup
+```
+
 
 ## **Remove LV / VG / PV**
 
 Remove LV:
-
+```
 sudo umount /mnt/backup
 
-sudo lvremove /dev/vg\_data/lv\_backup
-
+sudo lvremove /dev/vg_data/lv_backup
+```
 Remove VG:
-
-sudo vgremove vg\_data
-
+```
+sudo vgremove vg_data
+```
 Remove PV:
-
+```
 sudo pvremove /dev/sdb1
-
+```
 9) # **Useful commands (quick reference)**
 
-pvs		\# show physical volumes summary vgs		\# show volume groups summary lvs	\# show logical volumes summary pvdisplay \# detailed PV info  
-vgdisplay \# detailed VG info lvdisplay \# detailed LV info  
-vgextend / vgreduce \# add/remove PVs from VG lvextend / lvreduce \# grow/shrink logical volumes
+# show physical volumes summary   ## detailed PV info
+```
+pvs
+#or
+pvdisplay    
+```
+		
+# show volume groups summary   /# detailed VG info 
+```
+vgs
+#or
+vgdisplay      
+```
+# show logical volumes summary   #/# detailed LV info  
+```
+lvs
+or
+lvdisplay    
+```
+  
+vgdisplay
+vgextend / vgreduce /# add/remove PVs from VG lvextend / lvreduce /# grow/shrink logical volumes
 
 10) # **Extras (short interview points)**
 
