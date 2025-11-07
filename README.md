@@ -1,10 +1,17 @@
-**step-by-step guide** to *create LVM on Linux*, with the exact commands and short explanations so you can use it in interviews or on real servers.
 
 **Create LVM on Linux**
 
+
+
+**step-by-step guide** to *create LVM on Linux*, with the exact commands and short explanations so you can use it in interviews or on real servers.
+
+
+
 ⚠ **Safety first:** do this on a test VM or with empty disks/partitions. LVM commands can destroy data. Always back up important data before proceeding.
 
+
 1) # **Prepare physical disk or partition**
+2) 
 
 You can use a whole disk (e.g. /dev/sdb) or a partition (e.g. /dev/sdb1). Example (create a partition with fdisk):
 
