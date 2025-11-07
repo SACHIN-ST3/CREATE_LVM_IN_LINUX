@@ -24,49 +24,49 @@ Mark the device as an LVM PV:
 
 ```
 sudo pvcreate /dev/sdb1
-
-\# or: sudo pvcreate /dev/sdb
+# or:
+ sudo pvcreate /dev/sdb
 ```
 Check PVs:
-
+```
 sudo pvs
-
 sudo pvdisplay /dev/sdb1
-
 ```
 
 3) # **Create a Volume Group (VG)**
 
 Group one or more PVs into a Volume Group:
-
+```
 sudo vgcreate vg\_data /dev/sdb1  \# vg\_data is the VG name
-
+```
 Check VGs:
-
+```
 sudo vgs
-
 sudo vgdisplay vg\_data
-
+```
 4) # **Create a Logical Volume (LV)**
 
 Decide size (e.g. 10G) and name:
-
+```
 sudo lvcreate \-L 10G \-n lv\_backup vg\_data
-
-\# or to use all free space: sudo lvcreate \-l 100%FREE \-n lv\_backup vg\_data
-
+```
+\# or to use all free space:
+```
+sudo lvcreate \-l 100%FREE \-n lv\_backup vg\_data
+```
 Check LVs:
-
+```
 sudo lvs
-
 sudo lvdisplay /dev/vg\_data/lv\_backup
-
+```
 5) # **Create a filesystem on the LV**
 
 Choose filesystem (ext4 or xfs are common): sudo mkfs.ext4 /dev/vg\_data/lv\_backup
 
-\# or: sudo mkfs.xfs /dev/vg\_data/lv\_backup
-
+\# or:
+```
+sudo mkfs.xfs /dev/vg\_data/lv\_backup
+```
 6) # **Mount the LV**
 
 Create mountpoint and mount:
