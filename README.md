@@ -32,7 +32,7 @@ Mark the device as an LVM PV:
 ```
 sudo pvcreate /dev/sdb1
 ```
-# or:
+or
 ```
  sudo pvcreate /dev/sdb
 ```
