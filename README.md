@@ -51,14 +51,14 @@ Group one or more PVs into a Volume Group:
 sudo vgcreate vg_data /dev/sdb1
 ```
 
-# vg_data is the VG name
+ vg_data is the VG name
 
 
 Check VGs:
 ```
 sudo vgs
 ```
-#OR 
+OR 
 ```
 sudo vgdisplay vg_data
 ```
@@ -76,7 +76,7 @@ Check LVs:
 ```
 sudo lvs
 ```
-#OR
+OR
 ```
 sudo lvdisplay /dev/vg_data/lv_backup
 ```
@@ -87,7 +87,7 @@ Choose filesystem (ext4 or xfs are common):
 ```
 sudo mkfs.ext4 /dev/vg_data/lv_backup
 ```
-#OR
+OR
 ```
 sudo mkfs.xfs /dev/vg\_data/lv\_backup
 ```
