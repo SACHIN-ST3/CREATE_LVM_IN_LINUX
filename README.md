@@ -23,11 +23,10 @@ Or use the whole disk directly (no partitioning).
 Mark the device as an LVM PV:
 
 ```
-
 sudo pvcreate /dev/sdb1
 
 \# or: sudo pvcreate /dev/sdb
-
+```
 Check PVs:
 
 sudo pvs
